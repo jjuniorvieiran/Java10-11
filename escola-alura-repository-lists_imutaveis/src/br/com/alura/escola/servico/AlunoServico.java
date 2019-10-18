@@ -1,7 +1,7 @@
 package br.com.alura.escola.servico;
 
-import java.util.Collections;
 import java.util.List;
+
 import br.com.alura.escola.modelo.Aluno;
 
 public class AlunoServico {
@@ -13,12 +13,6 @@ public class AlunoServico {
 
 	public List<Aluno> listar() {
 		List<Aluno> alunos = List.of(priscila, fernando, rafael);
-		alunos.add(renata);
-		alunos.add(fernando);
-		
-//		alunos = Collections.unmodifiableList(alunos);
-		
-		
 		return alunos;
 	}
 }

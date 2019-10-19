@@ -36,8 +36,13 @@ public class Principal {
 						Collectors.filtering(a -> LocalDate.of(2019, 12,3).equals(a.getInicio()), Collectors.toList()) ) );
 
 
-        Optional<Aluno> aluno =  alunoServico.listarAlunoPorCPF(82757618083L);
-        aluno.ifPresentOrElse(System.out::println, () ->System.out.println("Aluno not present"));
+        Optional<Aluno> aluno =  alunoServico.listarAlunoPorCPF(1111L);
+        aluno.ifPresentOrElse(System.out::println, () -> System.out.println("Aluno not present"));
 
+		Optional<Aluno> alunoRec =  alunoServico.listarAlunoPorCPF(0000L)
+				.or(() -> alunoServico.listarAlunoPorCPF(1111L))
+				.or(() -> alunoServico.listarAlunoPorCPF(82757618083L));
+
+		System.out.println(alunoRec.get());
 	}
 }

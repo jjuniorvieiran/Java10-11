@@ -3,9 +3,11 @@ package br.com.alura.escola;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import br.com.alura.escola.modelo.Aluno;
 import br.com.alura.escola.modelo.Curso;
 import br.com.alura.escola.modelo.Turma;
 import br.com.alura.escola.servico.AlunoServico;
@@ -34,6 +36,8 @@ public class Principal {
 						Collectors.filtering(a -> LocalDate.of(2019, 12,3).equals(a.getInicio()), Collectors.toList()) ) );
 
 
-		System.out.println(turmasPorCurso2);
+        Optional<Aluno> aluno =  alunoServico.listarAlunoPorCPF(82757618083L);
+        aluno.ifPresentOrElse(System.out::println, () ->System.out.println("Aluno not present"));
+
 	}
 }

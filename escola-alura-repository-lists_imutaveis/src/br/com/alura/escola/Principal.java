@@ -1,5 +1,6 @@
 package br.com.alura.escola;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import br.com.alura.escola.dao.TestHttpDAO;
 import br.com.alura.escola.modelo.Aluno;
 import br.com.alura.escola.modelo.Curso;
 import br.com.alura.escola.modelo.Turma;
@@ -15,10 +17,12 @@ import br.com.alura.escola.servico.TurmaServico;
 
 public class Principal {
 
-	public static void main(String...strings) {
+	public static void main(String...strings) throws IOException {
 
 		AlunoServico alunoServico = new AlunoServico();
 		TurmaServico turmaServico = new TurmaServico();
+		TestHttpDAO testHttpDAO = new TestHttpDAO();
+
 		//alunoServico.listar().stream().forEach(System.out::println);
 		
 		List<String> alunos = alunoServico.listar().stream()
@@ -37,12 +41,14 @@ public class Principal {
 
 
         Optional<Aluno> aluno =  alunoServico.listarAlunoPorCPF(1111L);
-        aluno.ifPresentOrElse(System.out::println, () -> System.out.println("Aluno not present"));
+        //aluno.ifPresentOrElse(System.out::println, () -> System.out.println("Aluno not present"));
 
 		Optional<Aluno> alunoRec =  alunoServico.listarAlunoPorCPF(0000L)
 				.or(() -> alunoServico.listarAlunoPorCPF(1111L))
 				.or(() -> alunoServico.listarAlunoPorCPF(82757618083L));
 
-		System.out.println(alunoRec.get());
+		//System.out.println(alunoRec.get());
+
+		testHttpDAO.testeConnexaoHTTP();
 	}
 }

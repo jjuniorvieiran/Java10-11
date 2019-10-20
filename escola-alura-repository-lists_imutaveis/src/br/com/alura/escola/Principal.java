@@ -28,7 +28,7 @@ public class Principal {
 
         //alunoServico.listar().stream().forEach(System.out::println);
 
-        List<String> alunos = alunoServico.listar().stream()
+        var alunos = alunoServico.listar().stream()
                 .flatMap(aluno -> Stream.ofNullable(aluno.getNome()))
                 .map(aluno -> aluno.toUpperCase())
                 .collect(Collectors.toList());

@@ -3,22 +3,23 @@ package br.com.alura.escola.servico;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.alura.escola.modelo.Aluno;
 import br.com.alura.escola.modelo.Curso;
 import br.com.alura.escola.modelo.Turma;
 
 public class TurmaServico {
 
-	Curso java = new Curso("Java OO", "Conceitos b�sicos de OO", "12 horas");
-	Curso spring = new Curso("Spring", "Novidades do spring", "12 horas");
-	Curso ejb = new Curso("EJB", "EJB avancado", "16 horas");
-
 	AlunoServico alunoServico = new AlunoServico();
+	CursoServico cursoServico = new CursoServico();
 
 	public List<Turma> listar() {
+		List<Curso> cursos = cursoServico.listar();
+		List<Aluno> alunos = alunoServico.listar();
 		return List.of(
-				new Turma(LocalDate.of(2019, 4, 3), LocalDate.of(2019,  4, 5), java, alunoServico.listar().get(0) , alunoServico.listar().get(1)),
-				new Turma(LocalDate.of(2019, 4, 3), LocalDate.of(2019,  4, 13), spring, alunoServico.listar().get(0)),
-				new Turma(LocalDate.of(2019, 4, 17), LocalDate.of(2019, 4, 19), ejb, alunoServico.listar().get(1)));
+				new Turma(LocalDate.of(2019, 4, 3), LocalDate.of(2019,  4, 5), cursos.get(0), alunos.get(0) , alunos.get(1)),
+				new Turma(LocalDate.of(2019, 4, 3), LocalDate.of(2019,  4, 13), cursos.get(1), alunos.get(0)),
+				new Turma(LocalDate.of(2019, 4, 17), LocalDate.of(2019, 4, 19), cursos.get(2), alunos.get(1)));
 	}
 
 }
+

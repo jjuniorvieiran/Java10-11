@@ -1,59 +1,54 @@
 package br.com.alura.escola;
 
-import br.com.alura.escola.dao.TestHttp2DAO;
-import br.com.alura.escola.dao.TestHttpDAO;
-import br.com.alura.escola.modelo.Aluno;
-import br.com.alura.escola.modelo.Curso;
-import br.com.alura.escola.modelo.Turma;
-import br.com.alura.escola.servico.AlunoServico;
-import br.com.alura.escola.servico.TurmaServico;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import br.com.alura.escola.modelo.Turma;
+import br.com.alura.escola.servico.AlunoServico;
+import br.com.alura.escola.servico.CursoServico;
+import br.com.alura.escola.servico.LivroServico;
+import br.com.alura.escola.servico.TurmaServico;
+
 public class Principal {
 
-    public static void main(String... strings) throws IOException, URISyntaxException, InterruptedException {
+    public static void main(String...strings) {
 
-        AlunoServico alunoServico = new AlunoServico();
-        TurmaServico turmaServico = new TurmaServico();
-        TestHttpDAO testHttpDAO = new TestHttpDAO();
-        TestHttp2DAO testHttp2DAO = new TestHttp2DAO();
+        var alunoServico = new AlunoServico();
+        var turmaServico = new TurmaServico();
+        var livroServico = new LivroServico();
+        var cursoServico = new CursoServico();
 
-        //alunoServico.listar().stream().forEach(System.out::println);
+
+        livroServico.listar();
+
+        //System.out.println("Pegar livros sincrono start");
+        //cursoServico.pegarLivros().forEach(System.out::println);
+        //System.out.println("Pegar livros sincrono fim");
 
         var alunos = alunoServico.listar().stream()
-                .flatMap(aluno -> Stream.ofNullable(aluno.getNome()))
-                .map(aluno -> aluno.toUpperCase())
+                .flatMap(a -> Stream.ofNullable(a.getNome()))
+                .map(s -> s.toUpperCase())
                 .collect(Collectors.toList());
 
+        System.out.println("Lista de alunos matriculados na escola: " + alunos);
 
-        Map<Curso, List<Turma>> turmasPorCurso = turmaServico.listar().stream()
-                .filter(a -> LocalDate.of(2019, 4, 3).equals(a.getInicio()))
-                .collect(Collectors.groupingBy(Turma::getCurso));
-
-        Map<Curso, List<Turma>> turmasPorCurso2 = turmaServico.listar().stream()
+        var turmasPorCurso = turmaServico.listar().stream()
                 .collect(Collectors.groupingBy(Turma::getCurso,
-                        Collectors.filtering(a -> LocalDate.of(2019, 12, 3).equals(a.getInicio()), Collectors.toList())));
+                        Collectors.filtering(a -> a.getInicio().equals(LocalDate.of(2019, 4, 3)), Collectors.toList())));
 
+        System.out.println("Relao de turmas por curso: " + turmasPorCurso);
 
-        Optional<Aluno> aluno = alunoServico.listarAlunoPorCPF(1111L);
-        //aluno.ifPresentOrElse(System.out::println, () -> System.out.println("Aluno not present"));
+        var aluno = alunoServico.listarAlunoPorCPF(4915774030L);
+        aluno.ifPresentOrElse(System.out::println,
+                () -> System.out.println("N�o h� aluno cadastrado para este cpf"));
 
-        Optional<Aluno> alunoRec = alunoServico.listarAlunoPorCPF(0000L)
-                .or(() -> alunoServico.listarAlunoPorCPF(1111L))
-                .or(() -> alunoServico.listarAlunoPorCPF(82757618083L));
+        var alunoRecuperado = alunoServico.listarAlunoPorCPF(43647814016L)
+                .or(() -> alunoServico.listarAlunoPorCPF(49157745030L))
+                .or(() -> alunoServico.listarAlunoPorCPF(82757618083L))
+                .or(() -> alunoServico.listarAlunoPorCPF(41189989042L));
 
-        //System.out.println(alunoRec.get());
-
-        //testHttpDAO.testeConnexaoHTTP();
-
-        testHttp2DAO.testeConnexaoHTTP();
+        alunoRecuperado.ifPresentOrElse(System.out::println,
+                () -> System.out.println("N�o h� aluno cadastrado para este cpf"));
     }
 }
